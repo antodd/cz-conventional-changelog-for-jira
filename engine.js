@@ -42,6 +42,9 @@ module.exports = function(options) {
       case 'post-description':
         return type + scope + ': ' + subject + ' ' + jiraWithDecorators;
         break;
+      case 'footer':
+        return type + scope + ': ' + subject;
+        break;
       default:
         return type + scope + ': ' + jiraWithDecorators + subject;
     }
@@ -262,7 +265,12 @@ module.exports = function(options) {
           : '';
         breaking = breaking ? wrap(breaking, wrapOptions) : false;
 
-        var issues = answers.issues ? wrap(answers.issues, wrapOptions) : false;
+        var issues;
+        if (options.jiraMode && options.jiraLocation === 'footer') {
+          issues = jiraWithDecorators.trim();
+        } else {
+          issues = answers.issues ? wrap(answers.issues, wrapOptions) : false;
+        }
 
         const fullCommit = filter([head, body, breaking, issues]).join('\n\n');
 

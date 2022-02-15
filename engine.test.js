@@ -351,6 +351,34 @@ describe('commit message', function() {
       )
     ).to.equal(`${type}(${scope}): ${subject} ${jira} \n\n${body}`);
   });
+  it('footer jiraLocation', function() {
+    expect(
+      commitMessage(
+        {
+          type,
+          scope,
+          jira,
+          subject,
+          body
+        },
+        { jiraMode: true, jiraLocation: 'footer' }
+      )
+    ).to.equal(`${type}(${scope}): ${subject}\n\n${body}\n\n${jira}`);
+  });
+  it('footer jiraLocation no body', function() {
+    expect(
+      commitMessage(
+        {
+          type,
+          scope,
+          jira,
+          subject,
+          body: false
+        },
+        { jiraMode: true, jiraLocation: 'footer' }
+      )
+    ).to.equal(`${type}(${scope}): ${subject}\n\n${jira}`);
+  });
   it('jiraPrepend decorator', function() {
     expect(
       commitMessage(
