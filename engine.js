@@ -42,7 +42,7 @@ module.exports = function(options) {
       case 'post-description':
         return type + scope + ': ' + subject + ' ' + jiraWithDecorators;
         break;
-      case 'footer':
+      case 'post-body':
         return type + scope + ': ' + subject;
         break;
       default:
@@ -257,6 +257,14 @@ module.exports = function(options) {
 
         // Wrap these lines at options.maxLineWidth characters
         var body = answers.body ? wrap(answers.body, wrapOptions) : false;
+        if (options.jiraMode && options.jiraLocation === 'post-body') {
+          if (body === false) {
+            body = '';
+          } else {
+            body += "\n\n";
+          }
+          body += jiraWithDecorators.trim();
+        }
 
         // Apply breaking change prefix, removing it if already present
         var breaking = answers.breaking ? answers.breaking.trim() : '';
@@ -265,12 +273,7 @@ module.exports = function(options) {
           : '';
         breaking = breaking ? wrap(breaking, wrapOptions) : false;
 
-        var issues;
-        if (options.jiraMode && options.jiraLocation === 'footer') {
-          issues = jiraWithDecorators.trim();
-        } else {
-          issues = answers.issues ? wrap(answers.issues, wrapOptions) : false;
-        }
+        var issues = answers.issues ? wrap(answers.issues, wrapOptions) : false;
 
         const fullCommit = filter([head, body, breaking, issues]).join('\n\n');
 

@@ -351,7 +351,7 @@ describe('commit message', function() {
       )
     ).to.equal(`${type}(${scope}): ${subject} ${jira} \n\n${body}`);
   });
-  it('footer jiraLocation', function() {
+  it('post-body jiraLocation with body', function() {
     expect(
       commitMessage(
         {
@@ -361,11 +361,11 @@ describe('commit message', function() {
           subject,
           body
         },
-        { jiraMode: true, jiraLocation: 'footer' }
+        { ...defaultOptions, jiraLocation: 'post-body' }
       )
     ).to.equal(`${type}(${scope}): ${subject}\n\n${body}\n\n${jira}`);
   });
-  it('footer jiraLocation no body', function() {
+  it('post-body jiraLocation no body', function() {
     expect(
       commitMessage(
         {
@@ -375,9 +375,25 @@ describe('commit message', function() {
           subject,
           body: false
         },
-        { jiraMode: true, jiraLocation: 'footer' }
+        { ...defaultOptions, jiraLocation: 'post-body' }
       )
     ).to.equal(`${type}(${scope}): ${subject}\n\n${jira}`);
+  });
+  it('post-body jiraLocation with body and footer', function() {
+    var footer = `${breakingChange}${breaking}`;
+    expect(
+      commitMessage(
+        {
+          type,
+          scope,
+          jira,
+          subject,
+          body,
+          breaking,
+        },
+        { ...defaultOptions, jiraLocation: 'post-body' }
+      )
+    ).to.equal(`${type}(${scope}): ${subject}\n\n${body}\n\n${jira}\n\n${breakingChange}${breaking}`);
   });
   it('jiraPrepend decorator', function() {
     expect(
